@@ -25,9 +25,9 @@ jobs:
       - name: Kor bevakningen
         env:
           # Bevaka strackor mellan tva orter, bada hallen.
-          # Gallivare-Umea ligger med som tillfalligt test.
-          # Ta bort det nar du sett att notisen kommer fram.
-          PAR: "Stockholm-Östersund, Gällivare-Umeå"
+          # Lagg till fler par med komma om du vill,
+          # t.ex. "Stockholm-Östersund, Stockholm-Åre"
+          PAR: "Stockholm-Östersund"
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
         run: python freerider_check.py
 
