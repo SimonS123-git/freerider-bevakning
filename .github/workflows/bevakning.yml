@@ -1,0 +1,48 @@
+name: Freerider bevakning
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: freerider
+  cancel-in-progress: false
+
+jobs:
+  kolla:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Cacha Playwright-webblasare
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-v1
+
+      - name: Installera Playwright
+        run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium
+
+      - name: Kor bevakningen
+        env:
+          # ANDRA HAR: orter du vill bevaka, separerade med mellanslag
+          ORTER: "Östersund Stockholm Åre"
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: python freerider_check.py
+
+      - name: Spara sedda resor
+        run: |
+          git config user.name "freerider-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add sedda.json 2>/dev/null || true
+          git diff --cached --quiet || (git commit -m "Uppdatera sedda resor" && git push)
