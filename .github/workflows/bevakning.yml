@@ -36,7 +36,7 @@ jobs:
       - name: Kor bevakningen
         env:
           # ANDRA HAR: orter du vill bevaka, separerade med mellanslag
-          ORTER: "Östersund Stockholm Åre"
+          ORTER: "Östersund Stockholm Umeå"
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
         run: python freerider_check.py
 
